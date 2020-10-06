@@ -1,5 +1,6 @@
 import sys
 from os import path
+from Board import *
 
 move_file_name = "move_file"
 end_file_name = "end_game"
@@ -24,10 +25,12 @@ def read_move():
                 name, col, row = line.split(' ')
                 print("Move: " + name + " at (" + row + "," + col + ")")
 
+    return Location(row - 1, ord(col) - 65)
+
 
 def write_move(move):
     with open(move_file_name, 'w') as move_file:
-        move_txt = str(move)
+        move_txt = " " + char(move.y + 65) + " " + str(row + 1) 
         move_file.write(move_txt)
         move_file.write("\n")
         move_file.flush()
