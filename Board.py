@@ -1,10 +1,10 @@
 class Location:
-    x: int
-    y: int
+    row: int
+    col: int
 
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+    def __init__(self, row: int, col: int):
+        self.row = row
+        self.col = col
 
 class Board:
     # -1 empty, 0 agent, 1 opponent
@@ -16,7 +16,7 @@ class Board:
         self.board = [[-1] * 15 for i in range(15)]
 
     def putPiece(self, location: Location, piece: int):
-        self.board[location.x][location.y] = piece
+        self.board[location.row][location.col] = piece
 
         if piece == 0:
             agentPlacedPieces.append(location)
