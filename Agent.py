@@ -8,18 +8,18 @@ class Agent:
     io: IO
 
     def __init__(self):
-        board = Board()
-        io = IO("DefinitelyNotARobot")
+        self.board = Board()
+        self.io = IO("DefinitelyNotARobot")
 
-maximum depth = 12
-def numberOfBrokenThrees(state: Board, piece: int):
+maximumDepth = 12
+def numberOfBrokenThrees(state: Board, turn: int):
     pieceList: list
     numberOfBrokenThreesCounter = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
 
-    else if turn == 1:
+    elif turn == 1:
         pieceList = state.opponentPlacedPieces
 
     for piece in pieceList:
@@ -28,25 +28,25 @@ def numberOfBrokenThrees(state: Board, piece: int):
         for i in range(4):            
 
             if not ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) and (piece.row - 4 >= 0 and piece.col - 4 >= 0 and state.board[piece.row - 4][piece.col - 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                break
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                 counter += 1
-            else if piece.row - i >= 0 piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] != -1:
-                break;
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] != -1:
+                break
 
             if counter == 3:
                 numberOfBrokenThreesCounter += 1
         
         #up
         counter = 0
-        for i in range(piece.row, piece.row + 4):
-
+        for i in range(4):
+            
             if not ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) and (piece.row - 4 >= 0 and state.board[piece.row - 4][piece.col] == -1)):
-                break;
-            else if i >= 0 and state.board[i][piece.col] == turn:
+                break
+            elif (piece.row - i) >= 0 and state.board[piece.row - i][piece.col] == turn:
                 counter += 1
-            else if i >= 0 and state.board[i][piece.col] != -1:
-                break;
+            elif (piece.row - i) >= 0 and state.board[piece.row - i][piece.col] != -1:
+                break
 
             if counter == 3:
                 numberOfBrokenThreesCounter += 1
@@ -55,12 +55,12 @@ def numberOfBrokenThrees(state: Board, piece: int):
         counter = 0
         for i in range(4):
 
-            if not ((piece.row + 1 <= 14 and piece.col - 1 <= 14 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 >= 0 and state.board[piece.row - 4][piece.col + 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
+            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+                break
+            elif piece.row - i >= 0 and piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
-            else if piece.row - i >= 0 piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] != -1:
-                break;
+            elif piece.row - i >= 0 and piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] != -1:
+                break
 
             if counter == 3:
                 numberOfBrokenThreesCounter += 1
@@ -69,25 +69,25 @@ def numberOfBrokenThrees(state: Board, piece: int):
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
-                break;
-            else if i >= 0 and state.board[piece.row][i] == turn:
+                break
+            elif i >= 0 and state.board[piece.row][i] == turn:
                 counter += 1
-            else if i >= 0 and state.board[piece.row][i] != -1:
-                break;
+            elif i >= 0 and state.board[piece.row][i] != -1:
+                break
 
             if counter == 3:
                 numberOfBrokenThreesCounter += 1
 
     return numberOfBrokenThreesCounter
 
-def numberOfThrees(state: Board, piece: int):
+def numberOfThrees(state: Board, turn: int):
     pieceList: list
     numberOfThreesCounter = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
 
-    else if turn == 1:
+    elif turn == 1:
         pieceList = state.opponentPlacedPieces
 
     for piece in pieceList:
@@ -96,25 +96,25 @@ def numberOfThrees(state: Board, piece: int):
         for i in range(3):            
 
             if not ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) and (piece.row - 4 >= 0 and piece.col - 4 >= 0 and state.board[piece.row - 4][piece.col - 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                break
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfThreesCounter += 1
         
         #up
         counter = 0
-        for i in range(piece.row, piece.row + 3):
+        for i in range(3):
 
-            if not ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) and (piece.row - 4 >= 0 and state.board[piece.row - 4][piece.col] == -1)):
-                break;
-            else if i >= 0 and state.board[i][piece.col] == turn:
+            if not ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) and (piece.row - 3 >= 0 and state.board[piece.row - 3][piece.col] == -1)):
+                break
+            elif piece.row - i >= 0 and state.board[piece.row - i][piece.col] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfThreesCounter += 1
@@ -123,12 +123,12 @@ def numberOfThrees(state: Board, piece: int):
         counter = 0
         for i in range(3):
 
-            if not ((piece.row + 1 <= 14 and piece.col - 1 <= 14 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 >= 0 and state.board[piece.row - 4][piece.col + 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
+            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+                break
+            elif piece.row - i >= 0 and piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfThreesCounter += 1
@@ -137,25 +137,25 @@ def numberOfThrees(state: Board, piece: int):
         for i in range(piece.col, piece.col + 3):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
-                break;
-            else if i >= 0 and state.board[piece.row][i] == turn:
+                break
+            elif i >= 0 and state.board[piece.row][i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfThreesCounter += 1
 
-    return numberOfFoursCounter
+    return numberOfThreesCounter
 
-def numberOfStraightFours(state: Board, piece: int):
+def numberOfStraightFours(state: Board, turn: int):
     pieceList: list
     numberOfStraightFoursCounter = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
 
-    else if turn == 1:
+    elif turn == 1:
         pieceList = state.opponentPlacedPieces
 
     for piece in pieceList:
@@ -164,25 +164,25 @@ def numberOfStraightFours(state: Board, piece: int):
         for i in range(4):            
 
             if not ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) and (piece.row - 4 >= 0 and piece.col - 4 >= 0 and state.board[piece.row - 4][piece.col - 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                break
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfStraightFoursCounter += 1
         
         #up
         counter = 0
-        for i in range(piece.row, piece.row + 4):
+        for i in range(4):
 
             if not ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) and (piece.row - 4 >= 0 and state.board[piece.row - 4][piece.col] == -1)):
-                break;
-            else if i >= 0 and state.board[i][piece.col] == turn:
+                break
+            elif piece.row - i >= 0 and state.board[piece.row - i][piece.col] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfStraightFoursCounter += 1
@@ -191,12 +191,12 @@ def numberOfStraightFours(state: Board, piece: int):
         counter = 0
         for i in range(4):
 
-            if not ((piece.row + 1 <= 14 and piece.col - 1 <= 14 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 >= 0 and state.board[piece.row - 4][piece.col + 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
+            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) and (piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+                break
+            elif piece.row - i >= 0 and piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfStraightFoursCounter += 1
@@ -205,11 +205,11 @@ def numberOfStraightFours(state: Board, piece: int):
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
-                break;
-            else if i >= 0 and state.board[piece.row][i] == turn:
+                break
+            elif i >= 0 and state.board[piece.row][i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfStraightFoursCounter += 1
@@ -223,7 +223,7 @@ def numberOfFours(state: Board, turn: int):
     if turn == 0:
         pieceList = state.agentPlacedPieces
 
-    else if turn == 1:
+    elif turn == 1:
         pieceList = state.opponentPlacedPieces
 
     for piece in pieceList:
@@ -232,25 +232,25 @@ def numberOfFours(state: Board, turn: int):
         for i in range(4):            
 
             if not ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) ^ (piece.row - 4 >= 0 and piece.col - 4 >= 0 and state.board[piece.row - 4][piece.col - 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                break
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfFoursCounter += 1
         
         #up
         counter = 0
-        for i in range(piece.row, piece.row + 4):
+        for i in range(4):
 
             if not ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) ^ (piece.row - 4 >= 0 and state.board[piece.row - 4][piece.col] == -1)):
-                break;
-            else if i >= 0 and state.board[i][piece.col] == turn:
+                break
+            elif piece.row - i >= 0 and state.board[piece.row - i][piece.col] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfFoursCounter += 1
@@ -259,12 +259,12 @@ def numberOfFours(state: Board, turn: int):
         counter = 0
         for i in range(4):
 
-            if not ((piece.row + 1 <= 14 and piece.col - 1 <= 14 and state.board[piece.row + 1][piece.col - 1] == -1) ^ (piece.row - 4 >= 0 and piece.col + 4 >= 0 and state.board[piece.row - 4][piece.col + 4] == -1)):
-                break;
-            else if piece.row - i >= 0 piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
+            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) ^ (piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+                break
+            elif piece.row - i >= 0 and piece.col + i >= 0 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfFoursCounter += 1
@@ -273,11 +273,11 @@ def numberOfFours(state: Board, turn: int):
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) ^ (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
-                break;
-            else if i >= 0 and state.board[piece.row][i] == turn:
+                break
+            elif i >= 0 and state.board[piece.row][i] == turn:
                 counter += 1
-            else
-                break;
+            else:
+                break
 
             if counter == 4:
                 numberOfFoursCounter += 1
@@ -289,10 +289,10 @@ def winningCondition(state: Board, turn: int):
     if turn == 0:
         pieceList = state.agentPlacedPieces
 
-    else if turn == 1:
+    elif turn == 1:
         pieceList = state.opponentPlacedPieces
                                       
-    for piece in agentPlacedPieces:
+    for piece in pieceList:
         #up
         counter = 0
         for i in range(piece.row, piece.row + 5):
@@ -309,7 +309,7 @@ def winningCondition(state: Board, turn: int):
         for i in reversed(range(piece.row - 4, piece.row + 1)):
             if i >= 0 and state.board[i][piece.col] == turn:
                 counter += 1
-            else break;
+            else:break
             
             if counter == 5:
                 return True
@@ -319,17 +319,19 @@ def winningCondition(state: Board, turn: int):
         for i in reversed(range(piece.col - 4, piece.col + 1)):
             if i >= 0 and state.board[piece.row][i] == turn:
                 counter += 1
-            else break;
+            else:
+                break
             
             if counter == 5:
                 return True
 
         #right to left
         counter = 0
-        for i in range(piece.col, piece.col + 5)):
+        for i in range(piece.col, piece.col + 5):
             if i <= 14 and state.board[piece.row][i] == turn:
                 counter += 1
-            else break;
+            else:
+                break
             
             if counter == 5:
                 return True
@@ -339,7 +341,8 @@ def winningCondition(state: Board, turn: int):
         for i in range(5):
             if piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                 counter += 1
-            else break;
+            else:
+                break
             
             if counter == 5:
                 return True
@@ -349,7 +352,8 @@ def winningCondition(state: Board, turn: int):
         for i in range(5):
             if piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
-            else break;
+            else:
+                break
             
             if counter == 5:
                 return True
@@ -363,11 +367,8 @@ def possibleMoves(state: Board):
 
     return moveSet
 
-#NEEDS CHANGES, negative for opponent
 def utility(state: Board):
-
-    #agent utility
-    value = 0;
+    value = 0
 
     agentFours = numberOfFours(state, 0)
     agentStraightFours = numberOfStraightFours(state, 0)
@@ -408,7 +409,7 @@ def minValue(state: Board, alpha: int, beta: int, depth: int):
 
 def maxValue(state: Board, alpha: int, beta: int, depth: int):
     if winningCondition(state) or depth == maximumDepth:
-        return utility(state):
+        return utility(state)
 
     value = -sys.maxsize
 
@@ -430,7 +431,8 @@ def alphabetaSearch(state: Board):
     
     for location in possibleMoves(state):
 
-        if(bestAction == -1) bestAction = location
+        if(bestAction == -1):
+            bestAction = location
         
         newValue = maxValue(result(state, action), -sys.maxsize, sys.maxsize)
         if(newValue > bestActionValue):
@@ -441,12 +443,7 @@ def alphabetaSearch(state: Board):
 
 agent = Agent()
 
-while(agent.ready()):
+while(agent.io.ready()):
     agent.board.putPiece(IO.read_move())
     move = alphabetaSearch(agent.board.board)
     IO.write_move(move)
-
-
-
-    
-

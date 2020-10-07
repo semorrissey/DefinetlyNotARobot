@@ -14,13 +14,15 @@ class Board:
 
     def __init__(self):
         self.board = [[-1] * 15 for i in range(15)]
+        self.agentPlacedPieces = []
+        self.opponentPlacedPieces = []
 
     def putPiece(self, location: Location, piece: int):
         self.board[location.row][location.col] = piece
 
         if piece == 0:
-            agentPlacedPieces.append(location)
+            self.agentPlacedPieces.append(location)
 
-        else if piece == 1:
-            opponentPlacedPieces.append(location)
+        elif piece == 1:
+            self.opponentPlacedPieces.append(location)
         
