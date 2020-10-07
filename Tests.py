@@ -82,7 +82,7 @@ def testThrees():
     agentLocations.append(Location(0,0))
     agentLocations.append(Location(0,1))
     agentLocations.append(Location(0,2))
-    
+
     agentLocations.append(Location(1,1))
     agentLocations.append(Location(1,2))
     agentLocations.append(Location(1,3))
@@ -107,7 +107,7 @@ def testThrees():
     board = buildBoard(agentLocations, opponentLocations)
     testValue = numberOfThrees(board, 0)
 
-    if testValue == 3:
+    if testValue == 2:
         return True
     else:
         print("Number of threes seen: " + str(testValue))
@@ -158,7 +158,6 @@ def testWinningCondition():
     agentLocations.append(Location(4,6))
     agentLocations.append(Location(5,6))
     agentLocations.append(Location(6,6))
-    agentLocations.append(Location(5,10))
     agentLocations.append(Location(6,9))
     agentLocations.append(Location(7,8))
     agentLocations.append(Location(8,7))
@@ -185,9 +184,13 @@ def testWinningCondition():
     opponentLocations.append(Location(9,8))
     opponentLocations.append(Location(12,7))
 
-    board = buildBoard(agentLocations, opponentLocations)
+    non_winning_board = buildBoard(agentLocations, opponentLocations)
 
-    return winningCondition(board, 0)
+    agentLocations.append(Location(5,10))
+
+    winning_board = buildBoard(agentLocations, opponentLocations)
+
+    return winningCondition(winning_board, 0) and not winningCondition(non_winning_board, 0)
 
 if not testStraightFours():
     print("Straight fours failed")

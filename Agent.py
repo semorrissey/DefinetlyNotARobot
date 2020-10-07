@@ -51,7 +51,7 @@ def numberOfBrokenThrees(state: Board, turn: int):
             if counter == 3:
                 numberOfBrokenThreesCounter += 1
 
-        #diag right to left, up
+        #diag left to right, up
         counter = 0
         for i in range(4):
 
@@ -66,6 +66,7 @@ def numberOfBrokenThrees(state: Board, turn: int):
                 numberOfBrokenThreesCounter += 1
 
         #left to right
+        counter = 0
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
@@ -102,7 +103,7 @@ def numberOfThrees(state: Board, turn: int):
             else:
                 break
 
-            if counter == 4:
+            if counter == 3:
                 numberOfThreesCounter += 1
         
         #up
@@ -116,10 +117,10 @@ def numberOfThrees(state: Board, turn: int):
             else:
                 break
 
-            if counter == 4:
+            if counter == 3:
                 numberOfThreesCounter += 1
 
-        #diag right to left, up
+        #diag left to right, up
         counter = 0
         for i in range(3):
 
@@ -130,10 +131,11 @@ def numberOfThrees(state: Board, turn: int):
             else:
                 break
 
-            if counter == 4:
+            if counter == 3:
                 numberOfThreesCounter += 1
 
         #left to right
+        counter = 0
         for i in range(piece.col, piece.col + 3):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
@@ -143,7 +145,7 @@ def numberOfThrees(state: Board, turn: int):
             else:
                 break
 
-            if counter == 4:
+            if counter == 3:
                 numberOfThreesCounter += 1
 
     return numberOfThreesCounter
@@ -187,7 +189,7 @@ def numberOfStraightFours(state: Board, turn: int):
             if counter == 4:
                 numberOfStraightFoursCounter += 1
 
-        #diag right to left, up
+        #diag left to right, up
         counter = 0
         for i in range(4):
 
@@ -202,6 +204,7 @@ def numberOfStraightFours(state: Board, turn: int):
                 numberOfStraightFoursCounter += 1
 
         #left to right
+        counter = 0
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
@@ -255,7 +258,7 @@ def numberOfFours(state: Board, turn: int):
             if counter == 4:
                 numberOfFoursCounter += 1
 
-        #diag right to left, up
+        #diag left to right, up
         counter = 0
         for i in range(4):
 
@@ -270,6 +273,7 @@ def numberOfFours(state: Board, turn: int):
                 numberOfFoursCounter += 1
 
         #left to right
+        counter = 0
         for i in range(piece.col, piece.col + 4):
 
             if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) ^ (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
