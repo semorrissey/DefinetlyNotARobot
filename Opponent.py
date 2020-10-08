@@ -13,7 +13,7 @@ class Agent:
         self.io = IO("DefinitelyARobot")
 
 
-maximumDepth = 2
+maximumDepth = 3
 
 
 def numberOfBrokenThrees(state: Board, turn: int):
@@ -290,7 +290,8 @@ def numberOfFours(state: Board, turn: int):
         counter = 0
         for i in range(4):
 
-            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) ^ (piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+            if not ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) ^ (
+                    piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
                 break
             elif piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] == turn:
                 counter += 1
@@ -304,7 +305,8 @@ def numberOfFours(state: Board, turn: int):
         counter = 0
         for i in range(piece.col, piece.col + 4):
 
-            if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) ^ (piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
+            if not ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) ^ (
+                    piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
                 break
             elif i <= 14 and state.board[piece.row][i] == turn:
                 counter += 1
@@ -432,9 +434,9 @@ def minValue(state: Board, alpha: int, beta: int, depth: int):
     value = sys.maxsize
 
     for location in possibleMoves(state):
-        newState = state.bitchCopy()
-        newState.putPiece(location, 0)
-        value = min(value, maxValue(newState, alpha, beta, depth + 1))
+        state.putPiece(location, 0)
+        value = min(value, maxValue(state, alpha, beta, depth + 1))
+        state.putPiece(location, -1)
         if alpha <= beta:
             return value
         beta = min(beta, value)
@@ -449,9 +451,9 @@ def maxValue(state: Board, alpha: int, beta: int, depth: int):
     value = -sys.maxsize
 
     for location in possibleMoves(state):
-        newState = state.bitchCopy()
-        newState.putPiece(location, 1)
-        value = max(value, minValue(newState, alpha, beta, depth + 1))
+        state.putPiece(location, 1)
+        value = max(value, minValue(state, alpha, beta, depth + 1))
+        state.putPiece(location, -1)
         if value >= beta:
             return value
         alpha = max(alpha, value)
@@ -465,14 +467,14 @@ def alphabetaSearch(state: Board):
 
     for location in possibleMoves(state):
 
-        newState = state.bitchCopy()
-        newState.putPiece(location, 0)
+        state.putPiece(location, 0)
 
-        if (bestAction == -1):
+        if bestAction == -1:
             bestAction = location
 
-        newValue = maxValue(newState, -sys.maxsize, sys.maxsize, 1)
-        if (newValue > bestActionValue):
+        newValue = maxValue(state, -sys.maxsize, sys.maxsize, 1)
+        state.putPiece(location, -1)
+        if newValue > bestActionValue:
             bestAction = location
             bestActionValue = newValue
 
@@ -481,8 +483,8 @@ def alphabetaSearch(state: Board):
 
 agent = Agent()
 
-while (not game_over()):
-    while (agent.io.ready()):
+while not game_over():
+    while agent.io.ready():
         rd = read_move()
         if not rd == -1:
             print("row: " + str(rd.row) + ", col: " + str(rd.col))
@@ -497,4 +499,3 @@ while (not game_over()):
             agent.board.putPiece(move, 0)
         while agent.io.ready():
             pass
-

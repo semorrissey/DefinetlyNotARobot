@@ -11,7 +11,7 @@ class Agent:
         self.board = Board()
         self.io = IO("DefinitelyNotARobot")
 
-maximumDepth = 2
+maximumDepth = 3
 def numberOfBrokenThrees(state: Board, turn: int):
     pieceList: list
     numberOfBrokenThreesCounter = 0
@@ -400,9 +400,9 @@ def minValue(state: Board, alpha: int, beta: int, depth: int):
     value = sys.maxsize
 
     for location in possibleMoves(state):
-        newState = state.bitchCopy()
-        newState.putPiece(location, 0)
-        value = min(value, maxValue(newState, alpha, beta, depth + 1))
+        state.putPiece(location, 0)
+        value = min(value, maxValue(state, alpha, beta, depth + 1))
+        state.putPiece(location, -1)
         if alpha <= beta:
             return value
         beta = min(beta, value)
@@ -417,9 +417,9 @@ def maxValue(state: Board, alpha: int, beta: int, depth: int):
     value = -sys.maxsize
 
     for location in possibleMoves(state):
-        newState = state.bitchCopy()
-        newState.putPiece(location, 1)
-        value = max(value, minValue(newState, alpha, beta, depth + 1))
+        state.putPiece(location, 1)
+        value = max(value, minValue(state, alpha, beta, depth + 1))
+        state.putPiece(location, -1)
         if value >= beta:
             return value
         alpha = max(alpha, value)
@@ -433,14 +433,14 @@ def alphabetaSearch(state: Board):
     
     for location in possibleMoves(state):
 
-        newState = state.bitchCopy()
-        newState.putPiece(location, 0)
+        state.putPiece(location, 0)
 
-        if(bestAction == -1):
+        if bestAction == -1:
             bestAction = location
         
-        newValue = maxValue(newState, -sys.maxsize, sys.maxsize, 1)
-        if(newValue > bestActionValue):
+        newValue = maxValue(state, -sys.maxsize, sys.maxsize, 1)
+        state.putPiece(location, -1)
+        if newValue > bestActionValue:
             bestAction = location
             bestActionValue = newValue
 
@@ -448,8 +448,8 @@ def alphabetaSearch(state: Board):
 
 agent = Agent()
 
-while(not game_over()):
-    while(agent.io.ready()):
+while not game_over():
+    while agent.io.ready():
         rd = read_move()
         if not rd == -1:
             print("row: " + str(rd.row) + ", col: " + str(rd.col))

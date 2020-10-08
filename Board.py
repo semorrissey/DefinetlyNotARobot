@@ -6,6 +6,7 @@ class Location:
         self.row = row
         self.col = col
 
+
 class Board:
     # -1 empty, 0 agent, 1 opponent
     board: list
@@ -18,6 +19,7 @@ class Board:
         self.opponentPlacedPieces = []
 
     def putPiece(self, location: Location, piece: int):
+        prev_val = self.board[location.row][location.col]
         self.board[location.row][location.col] = piece
 
         if piece == 0:
@@ -25,17 +27,15 @@ class Board:
 
         elif piece == 1:
             self.opponentPlacedPieces.append(location)
+        else:
+            # removes last placed piece
+            if prev_val == 0:
+                self.agentPlacedPieces.pop()
+            elif prev_val == 1:
+                self.opponentPlacedPieces.pop()
 
     def printBoard(self):
         for i in range(15):
             for j in range(15):
                 print(self.board[i][j], end=" ")
             print()
-
-    def bitchCopy(self):
-        newBoard = Board()
-        for location in self.agentPlacedPieces:
-            newBoard.putPiece(location,0)
-        for location in self.opponentPlacedPieces:
-            newBoard.putPiece(location,1)
-        return newBoard
