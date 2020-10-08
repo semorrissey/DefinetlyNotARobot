@@ -25,4 +25,17 @@ class Board:
 
         elif piece == 1:
             self.opponentPlacedPieces.append(location)
-        
+
+    def printBoard(self):
+        for i in range(15):
+            for j in range(15):
+                print(self.board[i][j], end=" ")
+            print()
+
+    def bitchCopy(self):
+        newBoard = Board()
+        for location in self.agentPlacedPieces:
+            newBoard.putPiece(location,0)
+        for location in self.opponentPlacedPieces:
+            newBoard.putPiece(location,1)
+        return newBoard
