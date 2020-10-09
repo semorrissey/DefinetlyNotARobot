@@ -451,11 +451,31 @@ agent = Agent()
 while not game_over():
     while agent.io.ready():
         rd = read_move()
+
+        #Not the first move of the game
         if not rd == -1:
             print("row: " + str(rd.row) + ", col: " + str(rd.col))
+
+            #someone swaps with us
+            if turnNumber == 1 and agent.board[rd.row][rd.col] == 0:
+                agent.board.putPiece(rd)   
+
             agent.board.putPiece(rd, 1)
+
+            #always start in the center
+            if agent.board.turnNumber == 1:
+                move = Location(7,7)             
+                
+            else:
+                move = alphabetaSearch(agent.board)
+
+        #First move of the game
+        else:
+            move = Location(7,7)
+            
         agent.board.printBoard()
-        move = alphabetaSearch(agent.board)
+        
+        
         if move == -1:
             print("no best move found")
             agent.io.write_move(possibleMoves(agent.board)[0])
