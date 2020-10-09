@@ -296,7 +296,7 @@ def winningCondition(state: Board, turn: int):
         pieceList = state.opponentPlacedPieces
                                       
     for piece in pieceList:
-        #up
+        #down
         counter = 0
         for i in range(piece.row, piece.row + 5):
             if i <= 14 and state.board[i][piece.col] == turn:
@@ -307,17 +307,18 @@ def winningCondition(state: Board, turn: int):
             if counter == 5:
                 return 1
 
-        #down
+        #up
         counter = 0
         for i in reversed(range(piece.row - 4, piece.row + 1)):
             if i >= 0 and state.board[i][piece.col] == turn:
                 counter += 1
-            else:break
+            else:
+                break
             
             if counter == 5:
                 return 1
 
-        #left to right
+        #right to left
         counter = 0
         for i in reversed(range(piece.col - 4, piece.col + 1)):
             if i >= 0 and state.board[piece.row][i] == turn:
@@ -328,7 +329,7 @@ def winningCondition(state: Board, turn: int):
             if counter == 5:
                 return 1
 
-        #right to left
+        #left to right
         counter = 0
         for i in range(piece.col, piece.col + 5):
             if i <= 14 and state.board[piece.row][i] == turn:
@@ -360,7 +361,8 @@ def winningCondition(state: Board, turn: int):
             
             if counter == 5:
                 return 1
-        return 0
+            
+    return 0
 
 def possibleMoves(state: Board, turn: int, depth: int):
     moveSet = {}
@@ -373,8 +375,14 @@ def possibleMoves(state: Board, turn: int, depth: int):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
-                        heapq.heappush(h, (-utility(state), Location(i, j)))
+                        value = utility(state)
+                        heapq.heappush(h, (-value, Location(i, j)))
                         state.putPiece(loc, -1)
+
+                        #If there is a winning move, only choose it
+                        if value == sys.maxsize:
+                            onlyValue = [Location(i, j)]
+                            return onlyValue
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
@@ -382,8 +390,14 @@ def possibleMoves(state: Board, turn: int, depth: int):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
-                        heapq.heappush(h, (-utility(state), Location(i, j)))
+                        value = utility(state)
+                        heapq.heappush(h, (-value, Location(i, j)))
                         state.putPiece(loc, -1)
+
+                        #If there is a winning move, only choose it
+                        if value == -sys.maxsize:
+                            onlyValue = [Location(i, j)]
+                            return onlyValue
 
         for i in range(15):
             if not h:
@@ -433,9 +447,15 @@ def utility(state: Board):
     value -= numberOfBrokenThrees(state, 1) * 6
     value -= int(winningCondition(state, 1)) * 1000
 
-    if winningCondition(state, 0):
+    agentWin = winningCondition(state, 0)
+    opponentWin = winningCondition(state, 1)
+
+    if agentWin:
         value = sys.maxsize
-    
+
+    elif not agentWin and opponentWin:
+        value = -sys.maxsize
+        
     return value
     
     
