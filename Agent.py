@@ -11,7 +11,7 @@ class Agent:
         self.board = Board()
         self.io = IO("DefinitelyNotARobot")
 
-maximumDepth = 2
+maximumDepth = 3 
 
 
 def numberOfBrokenThrees(state: Board, turn: int):
@@ -362,10 +362,10 @@ def winningCondition(state: Board, turn: int):
                 return 1
         return 0
 
-def possibleMoves(state: Board, turn: int):
+def possibleMoves(state: Board, turn: int, depth: int):
     moveSet = {}
 
-    if state.turnNumber > 10:
+    if state.turnNumber > 5 and depth < maximumDepth - 1:
         h = []
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
@@ -391,7 +391,7 @@ def possibleMoves(state: Board, turn: int):
             else:
                 moveSet[heapq.heappop(h)[1]] = 1
 
-    elif state.turnNumber > 10:
+    elif state.turnNumber > 5:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.row+2):
@@ -420,21 +420,15 @@ def possibleMoves(state: Board, turn: int):
 
 def utility(state: Board):
     value = 0
-
-    agentFours = numberOfFours(state, 0)
-    agentStraightFours = numberOfStraightFours(state, 0)
-
-    opponentFours = numberOfFours(state, 1)
-    opponentStraightFours = numberOfStraightFours(state, 1)
     
-    value += agentFours * 10
-    value += agentStraightFours * 20
+    value += numberOfFours(state, 0) * 10
+    value += numberOfStraightFours(state, 0) * 20
     value += numberOfThrees(state, 0)
     value += numberOfBrokenThrees(state, 0) * 4
-    value += int(winningCondition(state, 0)) * 1500
+    value += int(winningCondition(state, 0)) * 100000
 
-    value -= opponentFours * 15
-    value -= opponentStraightFours * 30
+    value -= numberOfFours(state, 1) * 15
+    value -= numberOfStraightFours(state, 1) * 30
     value -= numberOfThrees(state, 1) * 2
     value -= numberOfBrokenThrees(state, 1) * 6
     value -= int(winningCondition(state, 1)) * 1000
@@ -448,7 +442,7 @@ def minValue(state: Board, alpha: int, beta: int, depth: int):
 
     value = sys.maxsize
 
-    for location in possibleMoves(state, 0):
+    for location in possibleMoves(state, 0, depth):
         state.putPiece(location, 0)
         value = min(value, maxValue(state, alpha, beta, depth + 1))
         state.putPiece(location, -1)
@@ -465,7 +459,7 @@ def maxValue(state: Board, alpha: int, beta: int, depth: int):
 
     value = -sys.maxsize
 
-    for location in possibleMoves(state, 1):
+    for location in possibleMoves(state, 1, depth):
         state.putPiece(location, 1)
         value = max(value, minValue(state, alpha, beta, depth + 1))
         state.putPiece(location, -1)
@@ -480,7 +474,7 @@ def alphabetaSearch(state: Board):
     bestActionValue = -sys.maxsize
     bestAction = -1
     
-    for location in possibleMoves(state, 0):
+    for location in possibleMoves(state, 0, 1):
 
         state.putPiece(location, 0)
 
@@ -525,13 +519,8 @@ while not game_over():
             move = Location(7,7)
             
         #agent.board.printBoard()
-        
-        
-        if move == -1:
-            print("no best move found")
-            agent.io.write_move(possibleMoves(agent.board, 0)[0])
-        else:
-            agent.io.write_move(move)
-            agent.board.putPiece(move, 0)
+    
+        agent.io.write_move(move)
+        agent.board.putPiece(move, 0)
         while agent.io.ready():
             pass
