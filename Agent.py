@@ -370,7 +370,7 @@ def possibleMoves(state: Board, turn: int, depth: int):
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.row+2):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
                         heapq.heappush(h, (-utility(state), Location(i, j)))
@@ -379,7 +379,7 @@ def possibleMoves(state: Board, turn: int, depth: int):
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.row+2):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
                         heapq.heappush(h, (-utility(state), Location(i, j)))
@@ -395,25 +395,25 @@ def possibleMoves(state: Board, turn: int, depth: int):
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.row+2):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.row+2):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
     else:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
                 for j in range(piece.col-2, piece.row+3):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
                 for j in range(piece.col-2, piece.row+3):
-                    if state.board[i][j] == -1:
+                    if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
     return moveSet.keys()
@@ -425,13 +425,16 @@ def utility(state: Board):
     value += numberOfStraightFours(state, 0) * 20
     value += numberOfThrees(state, 0)
     value += numberOfBrokenThrees(state, 0) * 4
-    value += int(winningCondition(state, 0)) * 100000
+    #value += int(winningCondition(state, 0)) * 100000
 
     value -= numberOfFours(state, 1) * 15
     value -= numberOfStraightFours(state, 1) * 30
     value -= numberOfThrees(state, 1) * 2
     value -= numberOfBrokenThrees(state, 1) * 6
     value -= int(winningCondition(state, 1)) * 1000
+
+    if winningCondition(state, 0):
+        value = sys.maxsize
     
     return value
     
