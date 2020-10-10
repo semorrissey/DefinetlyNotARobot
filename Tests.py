@@ -154,39 +154,20 @@ def testWinningCondition():
     agentLocations = []
     opponentLocations = []
 
-    agentLocations.append(Location(3,6))
-    agentLocations.append(Location(4,6))
-    agentLocations.append(Location(5,6))
-    agentLocations.append(Location(6,6))
-    agentLocations.append(Location(6,9))
-    agentLocations.append(Location(7,8))
-    agentLocations.append(Location(8,7))
-    agentLocations.append(Location(9,6))
-    agentLocations.append(Location(7,9))
-    agentLocations.append(Location(8,11))
-    agentLocations.append(Location(9,10))
-    agentLocations.append(Location(10,9))
-    agentLocations.append(Location(11,8))
+    agentLocations.append(Location(3,5))
+    agentLocations.append(Location(4,5))
+    agentLocations.append(Location(5,5))
+    agentLocations.append(Location(6,5))
 
-    opponentLocations.append(Location(2,6))
-    opponentLocations.append(Location(5,7))
-    opponentLocations.append(Location(5,8))
-    opponentLocations.append(Location(5,9))
-    opponentLocations.append(Location(6,7))
-    opponentLocations.append(Location(6,8))
+    opponentLocations.append(Location(5,6))
+    opponentLocations.append(Location(7,5))
     opponentLocations.append(Location(7,6))
     opponentLocations.append(Location(7,7))
-    opponentLocations.append(Location(7,12))
-    opponentLocations.append(Location(8,8))
-    opponentLocations.append(Location(8,9))
-    opponentLocations.append(Location(8,10))
-    opponentLocations.append(Location(9,7))
-    opponentLocations.append(Location(9,8))
-    opponentLocations.append(Location(12,7))
+    opponentLocations.append(Location(7,8))
 
     non_winning_board = buildBoard(agentLocations, opponentLocations)
 
-    agentLocations.append(Location(5,10))
+    agentLocations.append(Location(2,5))
 
     winning_board = buildBoard(agentLocations, opponentLocations)
 

@@ -11,7 +11,7 @@ class Agent:
         self.board = Board()
         self.io = IO("DefinitelyNotARobot")
 
-maximumDepth = 3 
+maximumDepth = 3
 
 
 def numberOfBrokenThrees(state: Board, turn: int):
@@ -371,7 +371,7 @@ def possibleMoves(state: Board, turn: int, depth: int):
         h = []
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
-                for j in range(piece.col-1, piece.row+2):
+                for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
@@ -380,13 +380,13 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         state.putPiece(loc, -1)
 
                         #If there is a winning move, only choose it
-                        if value == sys.maxsize:
-                            onlyValue = [Location(i, j)]
-                            return onlyValue
+                        # if value == sys.maxsize:
+                        #     onlyValue = [Location(i, j)]
+                        #     return onlyValue
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
-                for j in range(piece.col-1, piece.row+2):
+                for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
@@ -395,9 +395,9 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         state.putPiece(loc, -1)
 
                         #If there is a winning move, only choose it
-                        if value == -sys.maxsize:
-                            onlyValue = [Location(i, j)]
-                            return onlyValue
+                        # if value == sys.maxsize:
+                        #     onlyValue = [Location(i, j)]
+                        #     return onlyValue
 
         for i in range(15):
             if not h:
@@ -408,25 +408,25 @@ def possibleMoves(state: Board, turn: int, depth: int):
     elif state.turnNumber > 5:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
-                for j in range(piece.col-1, piece.row+2):
+                for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
-                for j in range(piece.col-1, piece.row+2):
+                for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
     else:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
-                for j in range(piece.col-2, piece.row+3):
+                for j in range(piece.col-2, piece.col+3):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
-                for j in range(piece.col-2, piece.row+3):
+                for j in range(piece.col-2, piece.col+3):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
                         moveSet[Location(i, j)] = 1
 
@@ -445,7 +445,7 @@ def utility(state: Board):
     value -= numberOfStraightFours(state, 1) * 30
     value -= numberOfThrees(state, 1) * 2
     value -= numberOfBrokenThrees(state, 1) * 6
-    value -= int(winningCondition(state, 1)) * 1000
+    #value -= int(winningCondition(state, 1)) * 1000
 
     agentWin = winningCondition(state, 0)
     opponentWin = winningCondition(state, 1)
@@ -453,20 +453,20 @@ def utility(state: Board):
     if agentWin:
         value = sys.maxsize
 
-    elif not agentWin and opponentWin:
+    elif opponentWin:
         value = -sys.maxsize
         
     return value
     
     
 def minValue(state: Board, alpha: int, beta: int, depth: int):
-    if winningCondition(state, 1) or depth == maximumDepth:
+    if winningCondition(state, 0) or depth == maximumDepth:
         return utility(state)
 
     value = sys.maxsize
 
-    for location in possibleMoves(state, 0, depth):
-        state.putPiece(location, 0)
+    for location in possibleMoves(state, 1, depth):
+        state.putPiece(location, 1)
         value = min(value, maxValue(state, alpha, beta, depth + 1))
         state.putPiece(location, -1)
         if value <= alpha:
@@ -477,13 +477,13 @@ def minValue(state: Board, alpha: int, beta: int, depth: int):
     
 
 def maxValue(state: Board, alpha: int, beta: int, depth: int):
-    if winningCondition(state, 0) or depth == maximumDepth:
+    if winningCondition(state, 1) or depth == maximumDepth:
         return utility(state)
 
     value = -sys.maxsize
 
-    for location in possibleMoves(state, 1, depth):
-        state.putPiece(location, 1)
+    for location in possibleMoves(state, 0, depth):
+        state.putPiece(location, 0)
         value = max(value, minValue(state, alpha, beta, depth + 1))
         state.putPiece(location, -1)
         if value >= beta:
@@ -509,6 +509,8 @@ def alphabetaSearch(state: Board):
         if newValue > bestActionValue:
             bestAction = location
             bestActionValue = newValue
+
+    print("value: " + str(bestActionValue))
 
     return bestAction
 
@@ -540,8 +542,12 @@ while not game_over():
         #First move of the game
         else:
             move = Location(7,7)
-            
-        #agent.board.printBoard()
+
+        poss = possibleMoves(agent.board, 0, 1)
+        for x in poss:
+            print("[" + str(x.row) + "," + str(x.col) + "]", end=" ")
+        print()
+        agent.board.printBoard(poss)
     
         agent.io.write_move(move)
         agent.board.putPiece(move, 0)
