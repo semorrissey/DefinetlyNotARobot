@@ -399,7 +399,7 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         #     onlyValue = [Location(i, j)]
                         #     return onlyValue
 
-        for i in range(15):
+        while len(moveSet) < 15:
             if not h:
                 break
             else:
@@ -544,9 +544,6 @@ while not game_over():
             move = Location(7,7)
 
         poss = possibleMoves(agent.board, 0, 1)
-        for x in poss:
-            print("[" + str(x.row) + "," + str(x.col) + "]", end=" ")
-        print()
         agent.board.printBoard(poss)
     
         agent.io.write_move(move)

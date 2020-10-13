@@ -154,24 +154,24 @@ def testWinningCondition():
     agentLocations = []
     opponentLocations = []
 
-    agentLocations.append(Location(3,5))
-    agentLocations.append(Location(4,5))
-    agentLocations.append(Location(5,5))
-    agentLocations.append(Location(6,5))
+    opponentLocations.append(Location(3,5))
+    opponentLocations.append(Location(4,5))
+    opponentLocations.append(Location(5,5))
+    opponentLocations.append(Location(6,5))
 
-    opponentLocations.append(Location(5,6))
-    opponentLocations.append(Location(7,5))
-    opponentLocations.append(Location(7,6))
-    opponentLocations.append(Location(7,7))
-    opponentLocations.append(Location(7,8))
+    agentLocations.append(Location(5,6))
+    agentLocations.append(Location(7,5))
+    agentLocations.append(Location(7,6))
+    agentLocations.append(Location(7,7))
+    agentLocations.append(Location(7,8))
 
     non_winning_board = buildBoard(agentLocations, opponentLocations)
 
-    agentLocations.append(Location(2,5))
+    opponentLocations.append(Location(2,5))
 
     winning_board = buildBoard(agentLocations, opponentLocations)
 
-    return winningCondition(winning_board, 0) and not winningCondition(non_winning_board, 0)
+    return winningCondition(winning_board, 1) and not winningCondition(non_winning_board, 1)
 
 if not testStraightFours():
     print("Straight fours failed")
