@@ -583,7 +583,7 @@ def utility(state: Board):
     value -= numberOfThrees(state, 1) * 3
     value -= numberOfBrokenThrees(state, 1) * 6
     value -= numberOfBrokenFours(state, 1) * 15
-    value -= numberOfOpenTwos(state, 0)
+    value -= numberOfOpenTwos(state, 1)
 
     agentWin = winningCondition(state, 0)
     opponentWin = winningCondition(state, 1)
