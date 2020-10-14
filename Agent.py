@@ -2,6 +2,7 @@ from IO import *
 from Board import *
 import sys
 import heapq
+import random
 
 class Agent:
     board: Board
@@ -11,12 +12,12 @@ class Agent:
         self.board = Board()
         self.io = IO("DefinitelyNotARobot")
 
-maximumDepth = 3
+maximumDepth = 4
 
 
 def numberOfBrokenThrees(state: Board, turn: int):
     pieceList: list
-    numberOfBrokenThreesCounter = 0
+    numberOfBrokenThrees = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
@@ -39,7 +40,7 @@ def numberOfBrokenThrees(state: Board, turn: int):
                 break
 
             if counter == 3:
-                numberOfBrokenThreesCounter += 1
+                numberOfBrokenThrees += 1
 
         # up
         counter = 0
@@ -54,7 +55,7 @@ def numberOfBrokenThrees(state: Board, turn: int):
                 break
 
             if counter == 3:
-                numberOfBrokenThreesCounter += 1
+                numberOfBrokenThrees += 1
 
         # diag left to right, up
         counter = 0
@@ -70,7 +71,7 @@ def numberOfBrokenThrees(state: Board, turn: int):
                 break
 
             if counter == 3:
-                numberOfBrokenThreesCounter += 1
+                numberOfBrokenThrees += 1
 
         # left to right
         counter = 0
@@ -85,14 +86,13 @@ def numberOfBrokenThrees(state: Board, turn: int):
                 break
 
             if counter == 3:
-                numberOfBrokenThreesCounter += 1
+                numberOfBrokenThrees += 1
 
-    return numberOfBrokenThreesCounter
+    return numberOfBrokenThrees
 
-
-def numberOfThrees(state: Board, turn: int):
+def numberOfOpenTwos(state: Board, turn: int):
     pieceList: list
-    numberOfThreesCounter = 0
+    numberOfOpenTwos = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
@@ -104,7 +104,73 @@ def numberOfThrees(state: Board, turn: int):
         # diag right to left, up
         counter = 0
         if ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) and (
-                piece.row - 4 >= 0 and piece.col - 4 >= 0 and state.board[piece.row - 4][piece.col - 4] == -1)):
+                piece.row - 2 >= 0 and piece.col - 2 >= 0 and state.board[piece.row - 2][piece.col - 2] == -1)):
+            for i in range(2):
+                if piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                    counter += 1
+                else:
+                    break
+
+                if counter == 2:
+                    numberOfOpenTwos += 1
+
+        # up
+        counter = 0
+        if ((piece.row + 1 <= 14 and state.board[piece.row + 1][piece.col] == -1) and (
+                piece.row - 2 >= 0 and state.board[piece.row - 2][piece.col] == -1)):
+            for i in range(2):
+                if piece.row - i >= 0 and state.board[piece.row - i][piece.col] == turn:
+                    counter += 1
+                else:
+                    break
+
+                if counter == 2:
+                    numberOfOpenTwos += 1
+
+        # diag left to right, up
+        counter = 0
+        if ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) and (
+                piece.row - 2 >= 0 and piece.col + 2 <= 14 and state.board[piece.row - 2][piece.col + 2] == -1)):
+            for i in range(2):
+                if piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] == turn:
+                    counter += 1
+                else:
+                    break
+
+                if counter == 2:
+                    numberOfOpenTwos += 1
+
+        # left to right
+        counter = 0
+        if ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (
+                piece.col + 2 <= 14 and state.board[piece.row][piece.col + 2] == -1)):
+            for i in range(piece.col, piece.col + 2):
+                if i <= 14 and state.board[piece.row][i] == turn:
+                    counter += 1
+                else:
+                    break
+
+                if counter == 2:
+                    numberOfOpenTwos += 1
+
+    return numberOfOpenTwos
+
+
+def numberOfThrees(state: Board, turn: int):
+    pieceList: list
+    numberOfThrees = 0
+
+    if turn == 0:
+        pieceList = state.agentPlacedPieces
+
+    elif turn == 1:
+        pieceList = state.opponentPlacedPieces
+
+    for piece in pieceList:
+        # diag right to left, up
+        counter = 0
+        if ((piece.row + 1 <= 14 and piece.col + 1 <= 14 and state.board[piece.row + 1][piece.col + 1] == -1) and (
+                piece.row - 3 >= 0 and piece.col - 3 >= 0 and state.board[piece.row - 3][piece.col - 3] == -1)):
             for i in range(3):
                 if piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
                     counter += 1
@@ -112,7 +178,7 @@ def numberOfThrees(state: Board, turn: int):
                     break
 
                 if counter == 3:
-                    numberOfThreesCounter += 1
+                    numberOfThrees += 1
 
         # up
         counter = 0
@@ -125,12 +191,12 @@ def numberOfThrees(state: Board, turn: int):
                     break
 
                 if counter == 3:
-                    numberOfThreesCounter += 1
+                    numberOfThrees += 1
 
         # diag left to right, up
         counter = 0
         if ((piece.row + 1 <= 14 and piece.col - 1 >= 0 and state.board[piece.row + 1][piece.col - 1] == -1) and (
-                piece.row - 4 >= 0 and piece.col + 4 <= 14 and state.board[piece.row - 4][piece.col + 4] == -1)):
+                piece.row - 3 >= 0 and piece.col + 3 <= 14 and state.board[piece.row - 3][piece.col + 3] == -1)):
             for i in range(3):
                 if piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] == turn:
                     counter += 1
@@ -138,12 +204,12 @@ def numberOfThrees(state: Board, turn: int):
                     break
 
                 if counter == 3:
-                    numberOfThreesCounter += 1
+                    numberOfThrees += 1
 
         # left to right
         counter = 0
         if ((piece.col - 1 >= 0 and state.board[piece.row][piece.col - 1] == -1) and (
-                piece.col + 4 <= 14 and state.board[piece.row][piece.col + 4] == -1)):
+                piece.col + 3 <= 14 and state.board[piece.row][piece.col + 3] == -1)):
             for i in range(piece.col, piece.col + 3):
                 if i <= 14 and state.board[piece.row][i] == turn:
                     counter += 1
@@ -151,14 +217,14 @@ def numberOfThrees(state: Board, turn: int):
                     break
 
                 if counter == 3:
-                    numberOfThreesCounter += 1
+                    numberOfThrees += 1
 
-    return numberOfThreesCounter
+    return numberOfThrees
 
 
 def numberOfStraightFours(state: Board, turn: int):
     pieceList: list
-    numberOfStraightFoursCounter = 0
+    numberOfStraightFours = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
@@ -178,7 +244,7 @@ def numberOfStraightFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfStraightFoursCounter += 1
+                    numberOfStraightFours += 1
 
         # up
         counter = 0
@@ -191,7 +257,7 @@ def numberOfStraightFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfStraightFoursCounter += 1
+                    numberOfStraightFours += 1
 
         # diag left to right, up
         counter = 0
@@ -204,7 +270,7 @@ def numberOfStraightFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfStraightFoursCounter += 1
+                    numberOfStraightFours += 1
 
         # left to right
         counter = 0
@@ -217,14 +283,14 @@ def numberOfStraightFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfStraightFoursCounter += 1
+                    numberOfStraightFours += 1
 
-    return numberOfStraightFoursCounter
+    return numberOfStraightFours
 
 
 def numberOfFours(state: Board, turn: int):
     pieceList: list
-    numberOfFoursCounter = 0
+    numberOfFours = 0
 
     if turn == 0:
         pieceList = state.agentPlacedPieces
@@ -244,7 +310,7 @@ def numberOfFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfFoursCounter += 1
+                    numberOfFours += 1
 
         # up
         counter = 0
@@ -257,7 +323,7 @@ def numberOfFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfFoursCounter += 1
+                    numberOfFours += 1
 
         # diag left to right, up
         counter = 0
@@ -270,7 +336,7 @@ def numberOfFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfFoursCounter += 1
+                    numberOfFours += 1
 
         # left to right
         counter = 0
@@ -283,9 +349,71 @@ def numberOfFours(state: Board, turn: int):
                     break
 
                 if counter == 4:
-                    numberOfFoursCounter += 1
+                    numberOfFours += 1
 
-    return numberOfFoursCounter
+    return numberOfFours
+
+def numberOfBrokenFours(state: Board, turn: int):
+    pieceList: list
+    numberOfBrokenFours = 0
+
+    if turn == 0:
+        pieceList = state.agentPlacedPieces
+
+    elif turn == 1:
+        pieceList = state.opponentPlacedPieces
+
+    for piece in pieceList:
+        # diag right to left, up
+        counter = 0
+        for i in range(5):
+
+            if piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] == turn:
+                counter += 1
+            elif piece.row - i >= 0 and piece.col - i >= 0 and state.board[piece.row - i][piece.col - i] != -1:
+                break
+
+            if counter == 4:
+                numberOfBrokenFours += 1
+
+        # up
+        counter = 0
+        for i in range(5):
+
+            if (piece.row - i) >= 0 and state.board[piece.row - i][piece.col] == turn:
+                counter += 1
+            elif (piece.row - i) >= 0 and state.board[piece.row - i][piece.col] != -1:
+                break
+
+            if counter == 4:
+                numberOfBrokenFours += 1
+
+        # diag left to right, up
+        counter = 0
+        for i in range(5):
+
+            if piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] == turn:
+                counter += 1
+            elif piece.row - i >= 0 and piece.col + i <= 14 and state.board[piece.row - i][piece.col + i] != -1:
+                break
+
+            if counter == 4:
+                numberOfBrokenFours += 1
+
+        # left to right
+        counter = 0
+        for i in range(piece.col, piece.col + 5):
+
+            if i <= 14 and state.board[piece.row][i] == turn:
+                counter += 1
+            elif i <= 14 and state.board[piece.row][i] != -1:
+                break
+
+            if counter == 4:
+                numberOfBrokenFours += 1
+
+    return numberOfBrokenFours
+    
 
 def winningCondition(state: Board, turn: int):
     pieceList: list
@@ -376,13 +504,17 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
                         value = utility(state)
-                        heapq.heappush(h, (-value, Location(i, j)))
-                        state.putPiece(loc, -1)
+
+                        if turn == 0:
+                            value = -value
 
                         #If there is a winning move, only choose it
-                        # if value == sys.maxsize:
-                        #     onlyValue = [Location(i, j)]
-                        #     return onlyValue
+                        if value == -sys.maxsize and turn == 0:
+                            onlyValue = [Location(i, j)]
+                            return onlyValue
+
+                        heapq.heappush(h, (value, Location(i, j)))
+                        state.putPiece(loc, -1)
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
@@ -391,21 +523,25 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         loc = Location(i, j)
                         state.putPiece(loc, turn)
                         value = utility(state)
-                        heapq.heappush(h, (-value, Location(i, j)))
-                        state.putPiece(loc, -1)
+
+                        if turn == 0:
+                            value = -value
 
                         #If there is a winning move, only choose it
-                        # if value == sys.maxsize:
-                        #     onlyValue = [Location(i, j)]
-                        #     return onlyValue
+                        if value == -sys.maxsize and turn == 0:
+                            onlyValue = [Location(i, j)]
+                            return onlyValue
+                            
+                        heapq.heappush(h, (value, Location(i, j)))
+                        state.putPiece(loc, -1)
 
-        while len(moveSet) < 15:
+        while len(moveSet) < 12:
             if not h:
                 break
             else:
                 moveSet[heapq.heappop(h)[1]] = 1
 
-    elif state.turnNumber > 5:
+    elif state.turnNumber > 2:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.col+2):
@@ -437,15 +573,17 @@ def utility(state: Board):
     
     value += numberOfFours(state, 0) * 10
     value += numberOfStraightFours(state, 0) * 20
-    value += numberOfThrees(state, 0)
+    value += numberOfThrees(state, 0) * 2
     value += numberOfBrokenThrees(state, 0) * 4
-    #value += int(winningCondition(state, 0)) * 100000
+    value += numberOfBrokenFours(state, 0) * 10
+    value += numberOfOpenTwos(state, 0)
 
     value -= numberOfFours(state, 1) * 15
     value -= numberOfStraightFours(state, 1) * 30
-    value -= numberOfThrees(state, 1) * 2
+    value -= numberOfThrees(state, 1) * 3
     value -= numberOfBrokenThrees(state, 1) * 6
-    #value -= int(winningCondition(state, 1)) * 1000
+    value -= numberOfBrokenFours(state, 1) * 15
+    value -= numberOfOpenTwos(state, 0)
 
     agentWin = winningCondition(state, 0)
     opponentWin = winningCondition(state, 1)
@@ -504,8 +642,15 @@ def alphabetaSearch(state: Board):
         if bestAction == -1:
             bestAction = location
         
-        newValue = minValue(state, -sys.maxsize, sys.maxsize, 1)
+        newValue = minValue(state, -sys.maxsize, sys.maxsize, 2)
         state.putPiece(location, -1)
+
+        #If moves have the same value, pick a random one
+        if newValue == bestActionValue:
+            if(random.randrange(0,2) == 0):
+                bestAction = location
+                bestActionValue = newValue
+            
         if newValue > bestActionValue:
             bestAction = location
             bestActionValue = newValue

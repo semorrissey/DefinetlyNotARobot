@@ -19,7 +19,7 @@ class IO:
         with open(move_file_name, 'w') as move_file:
             move_file.seek(0)
             move_txt = self.name + " " + str(chr(move.col + 97)) + " " + str(move.row + 1)
-            print("My Move: " + move_txt)
+            print("My Move: " + move_txt + "\n")
             move_file.write(move_txt)
             move_file.write("\n")
             move_file.flush()

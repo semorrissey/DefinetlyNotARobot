@@ -95,6 +95,10 @@ def testThrees():
     agentLocations.append(Location(4,1))
     agentLocations.append(Location(5,1))
 
+    agentLocations.append(Location(8,8))
+    agentLocations.append(Location(9,9))
+    agentLocations.append(Location(10,10))
+
     agentLocations.append(Location(12,2))
     agentLocations.append(Location(13,2))
     agentLocations.append(Location(14,2))
@@ -107,7 +111,7 @@ def testThrees():
     board = buildBoard(agentLocations, opponentLocations)
     testValue = numberOfThrees(board, 0)
 
-    if testValue == 2:
+    if testValue == 3:
         return True
     else:
         print("Number of threes seen: " + str(testValue))
@@ -150,6 +154,47 @@ def testBrokenThrees():
         print("Number of broken threes seen: " + str(testValue))
         return False
 
+def testBrokenFours():
+    agentLocations = []
+    opponentLocations = []
+
+    agentLocations.append(Location(12,0))
+    agentLocations.append(Location(12,1))
+    agentLocations.append(Location(12,2))
+
+    nonBoard = buildBoard(agentLocations, opponentLocations)
+    testValue1 = numberOfBrokenFours(nonBoard, 0)
+
+    agentLocations.append(Location(12,4))
+
+    board = buildBoard(agentLocations, opponentLocations)
+    testValue2 = numberOfBrokenFours(board, 0)
+
+    if testValue1 == 0 and testValue2 == 1:
+        return True
+    else:
+        print("Number of broken Fours seen: " + str(testValue2))
+        return False
+
+def testOpenTwos():
+    agentLocations = []
+    opponentLocations = []
+
+    agentLocations.append(Location(1,1))
+    agentLocations.append(Location(2,2))
+
+    agentLocations.append(Location(0,10))
+    agentLocations.append(Location(1,10))
+
+    board = buildBoard(agentLocations, opponentLocations)
+
+    testValue = numberOfOpenTwos(board, 0)
+
+    if testValue == 1:
+        return True
+    else:
+        print("Number of open twos seen: " + str(testValue))
+
 def testWinningCondition():
     agentLocations = []
     opponentLocations = []
@@ -184,6 +229,12 @@ if not testThrees():
 
 if not testBrokenThrees():
     print("Broken Threes failed")
+
+if not testBrokenFours():
+    print("Broken Fours failed")
+
+if not testOpenTwos():
+    print("Broken twos failed")
 
 if not testWinningCondition():
     print("Winning condition failed")
