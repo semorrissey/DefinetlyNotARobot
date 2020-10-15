@@ -13,6 +13,7 @@ class Agent:
         self.io = IO("DefinitelyNotARobot")
 
 maximumDepth = 4
+branchingFactor = 14
 
 
 def numberOfBrokenThrees(state: Board, turn: int):
@@ -493,7 +494,8 @@ def winningCondition(state: Board, turn: int):
     return 0
 
 def possibleMoves(state: Board, turn: int, depth: int):
-    moveSet = {}
+    moveSetEarly = {}
+    moveSetLater = []
 
     if state.turnNumber > 5 and depth < maximumDepth - 1:
         h = []
@@ -535,38 +537,42 @@ def possibleMoves(state: Board, turn: int, depth: int):
                         heapq.heappush(h, (value, Location(i, j)))
                         state.putPiece(loc, -1)
 
-        while len(moveSet) < 12:
+        while len(moveSetLater) < branchingFactor:
             if not h:
                 break
             else:
-                moveSet[heapq.heappop(h)[1]] = 1
+                move = heapq.heappop(h)[1]
+                if move not in moveSetLater:
+                    moveSetLater.append(move)
+
+        return moveSetLater
 
     elif state.turnNumber > 2:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
-                        moveSet[Location(i, j)] = 1
+                        moveSetEarly[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-1, piece.row+2):
                 for j in range(piece.col-1, piece.col+2):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
-                        moveSet[Location(i, j)] = 1
+                        moveSetEarly[Location(i, j)] = 1
     else:
         for piece in state.agentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
                 for j in range(piece.col-2, piece.col+3):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
-                        moveSet[Location(i, j)] = 1
+                        moveSetEarly[Location(i, j)] = 1
 
         for piece in state.opponentPlacedPieces:
             for i in range(piece.row-2, piece.row+3):
                 for j in range(piece.col-2, piece.col+3):
                     if i >= 0 and i <= 14 and j >= 0 and j <= 14 and state.board[i][j] == -1:
-                        moveSet[Location(i, j)] = 1
+                        moveSetEarly[Location(i, j)] = 1
 
-    return moveSet.keys()
+    return moveSetEarly.keys()
 
 def utility(state: Board):
     value = 0
@@ -578,12 +584,12 @@ def utility(state: Board):
     value += numberOfBrokenFours(state, 0) * 10
     value += numberOfOpenTwos(state, 0)
 
-    value -= numberOfFours(state, 1) * 15
-    value -= numberOfStraightFours(state, 1) * 30
-    value -= numberOfThrees(state, 1) * 3
-    value -= numberOfBrokenThrees(state, 1) * 6
-    value -= numberOfBrokenFours(state, 1) * 15
-    value -= numberOfOpenTwos(state, 1)
+    value -= numberOfFours(state, 1) * 20
+    value -= numberOfStraightFours(state, 1) * 40
+    value -= numberOfThrees(state, 1) * 4
+    value -= numberOfBrokenThrees(state, 1) * 8
+    value -= numberOfBrokenFours(state, 1) * 20
+    value -= numberOfOpenTwos(state, 1) * 2
 
     agentWin = winningCondition(state, 0)
     opponentWin = winningCondition(state, 1)
@@ -671,6 +677,18 @@ while not game_over():
         if not rd == -1:
             print("row: " + str(rd.row) + ", col: " + str(rd.col))
 
+            #dynamic so that it does not run out of time
+            if agent.board.turnNumber == 40:
+                maximumDepth = 3
+                branchingFactor = 25
+                print("updated branching factor")
+
+            elif agent.board.turnNumber == 65:
+                branchingFactor = 20
+
+            elif agent.board.turnNumber == 150:
+                branchingFactor = 15
+            
             #someone swaps with us
             if agent.board.turnNumber == 1 and agent.board.board[rd.row][rd.col] == 0:
                 agent.board.putPiece(rd)   
